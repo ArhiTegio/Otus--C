@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1693154458 source:c:\git\c\03 - rarjpeg\rarjpeg\main.c
+	<stdio.h>
+	<stdlib.h>
+	<inttypes.h>
+
