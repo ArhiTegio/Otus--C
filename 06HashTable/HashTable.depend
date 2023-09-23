@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1695497360 source:d:\git\c\06 - hashtable\hashtable\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
