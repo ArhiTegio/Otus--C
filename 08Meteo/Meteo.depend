@@ -1,0 +1,126 @@
+# depslib dependency file v1.0
+1695573142 source:d:\git\c\08 - lib\meteo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+	"curl/curl.h"
+	"curl/typecheck-gcc.h"
+	"curl/easy.h"
+	"cJSON.h"
+
+1694178216 d:\git\c\08 - lib\meteo\curl\curl.h
+	"curlver.h"
+	"system.h"
+	<stdio.h>
+	<limits.h>
+	<osreldate.h>
+	<sys/types.h>
+	<time.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<sys/select.h>
+	<sys/socket.h>
+	<sys/time.h>
+	"easy.h"
+	"multi.h"
+	"urlapi.h"
+	"options.h"
+	"header.h"
+	"websockets.h"
+	"typecheck-gcc.h"
+
+1694575220 d:\git\c\08 - lib\meteo\curl\curlver.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl\system.h
+	<ConditionalMacros.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/poll.h>
+
+1694178216 d:\git\c\08 - lib\meteo\curl\easy.h
+
+1694406100 d:\git\c\08 - lib\meteo\curl\multi.h
+	"curl.h"
+
+1694178216 d:\git\c\08 - lib\meteo\curl\urlapi.h
+	"curl.h"
+
+1694178216 d:\git\c\08 - lib\meteo\curl\options.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl\header.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl\websockets.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl\typecheck-gcc.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\curl.h
+	"curlver.h"
+	"system.h"
+	<stdio.h>
+	<limits.h>
+	<osreldate.h>
+	<sys/types.h>
+	<time.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<sys/select.h>
+	<sys/socket.h>
+	<sys/time.h>
+	"easy.h"
+	"multi.h"
+	"urlapi.h"
+	"options.h"
+	"header.h"
+	"websockets.h"
+	"typecheck-gcc.h"
+
+1694575220 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\curlver.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\system.h
+	<ConditionalMacros.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/poll.h>
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\easy.h
+
+1694406100 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\multi.h
+	"curl.h"
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\urlapi.h
+	"curl.h"
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\options.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\header.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\websockets.h
+
+1694178216 d:\git\c\08 - lib\meteo\curl-8.3.0_2-win64-mingw\include\curl\typecheck-gcc.h
+
+1688527340 d:\git\c\08 - lib\meteo\cjson-1.7.16\cjson.h
+	<stddef.h>
+
+1688527340 d:\git\c\08 - lib\meteo\cjson\cjson.h
+	<stddef.h>
+
+1629890110 d:\git\c\08 - lib\meteo\cjson-1.7.15\cjson.h
+	<stddef.h>
+
+1695571450 source:d:\git\c\08 - lib\meteo\cjson\cjson.c
+	<string.h>
+	<stdio.h>
+	<math.h>
+	<stdlib.h>
+	<limits.h>
+	<ctype.h>
+	<float.h>
+	<locale.h>
+	"cJSON.h"
+
