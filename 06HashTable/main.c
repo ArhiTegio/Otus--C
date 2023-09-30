@@ -49,14 +49,14 @@ struct hash_table create_hash_table(int size)
     return hash;
 }
 
-struct row get_last_row(struct hash_table hash, int index)
+struct row get_last_row(struct hash_table *hash, int index)
 {
-    struct row r = hash.data_array[index];
+    struct row r = hash->data_array[index];
     int position = 0;
     do
     {
         if(r.next_addres >= 0){
-            r = hash.data_array[r.next_addres];
+            r = hash->data_array[r.next_addres];
             position = position + 1;
         }
         else{
@@ -65,17 +65,17 @@ struct row get_last_row(struct hash_table hash, int index)
     }
     while(1);
 
-    if(hash.position_hash_table < index){
-        hash.position_hash_table = index;
+    if(hash->position_hash_table < index){
+        hash->position_hash_table = index;
     }
 
     return r;
 }
 
-struct hash_table add(struct hash_table hash, char *key, int value)
+struct hash_table add(struct hash_table *hash, char *key, int value)
 {
-    int position = hash_func(key, hash.count_data_table);
-    if(hash.position_data_table < hash.count_data_table)
+    int position = hash_func(key, hash->count_data_table);
+    if(hash->position_data_table < hash->count_data_table)
     {
         struct row r = {NULL, -1, -1, -1};
         r.key = key;
@@ -83,30 +83,30 @@ struct hash_table add(struct hash_table hash, char *key, int value)
         r.is_deleted = 0;
         r.next_addres = -1;
 
-        if(hash.hash_array[position] == -1)
+        if(hash->hash_array[position] == -1)
         {
-            hash.hash_array[position] = hash.position_data_table;
-            hash.data_array[hash.position_data_table] = r;
+            hash->hash_array[position] = hash->position_data_table;
+            hash->data_array[hash->position_data_table] = r;
         }
         else {
             struct row r_old = get_last_row(hash, position);
-            r_old.next_addres = hash.position_data_table;
-            hash.data_array[hash.position_data_table] = r;
+            r_old.next_addres = hash->position_data_table;
+            hash->data_array[hash->position_data_table] = r;
         }
-        hash.position_data_table = hash.position_data_table + 1;
+        hash->position_data_table = hash->position_data_table + 1;
     }
     else
     {
         //Выполнить расширение масства данных если hash->position_hash_table больше определенного значения.
         printf("Hash table overflowing.");
     }
-    return hash;
+    return *hash;
 }
 
 
-struct hash_table delete_(struct hash_table hash, char* key){
-    int position = hash_func(key, hash.count_data_table);
-    struct row r = hash.data_array[hash.hash_array[position]];
+struct hash_table delete_(struct hash_table *hash, char* key){
+    int position = hash_func(key, hash->count_data_table);
+    struct row r = hash->data_array[hash->hash_array[position]];
 
     do {
         if(strcmp(r.key, key) == 0){
@@ -115,7 +115,7 @@ struct hash_table delete_(struct hash_table hash, char* key){
         }
         else {
             if(r.next_addres >= 0) {
-                r = hash.data_array[r.next_addres];
+                hash->data_array[r.next_addres].is_deleted = 1;
             }
             else{
                 break;
@@ -124,21 +124,59 @@ struct hash_table delete_(struct hash_table hash, char* key){
     }
     while(1);
 
-    return hash;
+    return *hash;
 }
 
-int get_(struct hash_table hash, char *key){
-    int position = hash_func(key, hash.count_data_table);
-    int index = hash.hash_array[position];
-    struct row r = hash.data_array[index];
+int get_(struct hash_table *hash, char *key){
+    int position = hash_func(key, hash->count_data_table);
+    int index = hash->hash_array[position];
+    struct row r = hash->data_array[index];
+    int val = -1;
+    if(&r == NULL && r.value != -1)
+    {
+        do {
+            if(r.key != NULL && strcmp(r.key, key) == 0){
+                break;
+            }
+            else {
+                if(r.next_addres >= 0) {
+                    if(&hash->data_array[r.next_addres] != NULL)
+                    {
+                        r = hash->data_array[r.next_addres];
+                    }
 
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        while(1);
+    }
+
+    if(r.key != NULL)
+    {
+        val = r.value;
+    }
+    return val;
+}
+
+struct hash_table set_(struct hash_table *hash, char *key, int *value)
+{
+    int val = *value;
+    //printf("%d\n", val);
+    int position = hash_func(key, hash->count_data_table);
+    int index = hash->hash_array[position];
+    struct row r = hash->data_array[index];
     do {
-        if(strcmp(r.key, key) == 0){
+        if(&r != NULL && strcmp(r.key, key) == 0){
+            hash->data_array[index].value = val;
             break;
         }
         else {
-            if(r.next_addres >= 0) {
-                r = hash.data_array[r.next_addres];
+            if(&r != NULL && r.next_addres >= 0) {
+                index = r.next_addres;
+                r = hash->data_array[r.next_addres];
             }
             else{
                 break;
@@ -146,22 +184,91 @@ int get_(struct hash_table hash, char *key){
         }
     }
     while(1);
-    return r.value;
+    printf("%s %d %d\n", key, val, hash->data_array[index].value);
+    return *hash;
+}
+
+int split (const char *txt, char delim, char ***tokens)
+{
+    int *tklen, *t, count = 1;
+    char **arr, *p = (char *) txt;
+
+    while (*p != '\0') if (*p++ == delim) count += 1;
+    t = tklen = calloc (count, sizeof (int));
+    for (p = (char *) txt; *p != '\0'; p++) *p == delim ? *t++ : (*t)++;
+    *tokens = arr = malloc (count * sizeof (char *));
+    t = tklen;
+    p = *arr++ = calloc (*(t++) + 1, sizeof (char *));
+    while (*txt != '\0')
+    {
+        if (*txt == delim)
+        {
+            p = *arr++ = calloc (*(t++) + 1, sizeof (char *));
+            txt++;
+        }
+        else *p++ = *txt++;
+    }
+    free (tklen);
+    return count;
 }
 
 
-
-int main()
+int main(int argc, char **argv)
 {
-    struct hash_table hash = create_hash_table(256);
+    if(argc > 1){
+        struct hash_table hash = create_hash_table(256);
+        char buffer[512];
+        char** strings;
 
-    hash = add(hash, "test1", 12345);
-    hash = add(hash, "test2", 123456);
-    hash = add(hash, "test3", 1234567);
+        // чтение из файла
+        printf(argv[1]);
+        printf("\n");
+        FILE *fp = fopen(argv[1], "r");
+        if(fp)
+        {
+            while((fgets(buffer, 512, fp))!=NULL)
+            {
+                printf("%s", buffer);
+            }
+            fclose(fp);
+        }
+        else
+        {
+            printf("Path not open.");
+            return 0;
+        }
+        printf("\n");
+        int count;
+        //strings = str_split(buffer, 0x20);
+        count = split(buffer, 0x20, &strings);
 
-    printf("test1 = %d test2 = %d test3 %d\n", get_(hash, "test1"), get_(hash, "test2"), get_(hash, "test3"));
+        printf("%d \n", count);
+        for(int i = 0; i < count; ++i)
+        {
 
-    printf("%d\n", hash.count_data_table);
-    printf("Hello world!\n");
+            int val = get_(&hash, strings[i]);
+            if(val <= -1)
+            {
+                add(&hash, strings[i], 1);
+            }
+            else
+            {
+                val = 1 + val;
+                set_(&hash, strings[i], &val);
+            }
+        }
+
+        for(int i = 0; i < sizeof(hash.data_array); ++i)
+        {
+            if(&hash.data_array[i] != NULL && &hash.data_array[i].key != NULL && hash.data_array[i].value > 0) {
+                printf("%s = %d\n", hash.data_array[i].key, hash.data_array[i].value);
+            }
+        }
+    }
+    else
+    {
+        printf("Wrong first argument file path");
+    }
+
     return 0;
 }
