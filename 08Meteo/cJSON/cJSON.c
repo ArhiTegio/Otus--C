@@ -116,6 +116,75 @@ CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item)
     return item->valuedouble;
 }
 
+CJSON_PUBLIC(char *) cJSON_GetStringByKeyName(const cJSON * const start_item, char *key)
+{
+    cJSON **buffer;
+    buffer = malloc(1024 * sizeof(cJSON));
+    cJSON *item;
+    cJSON *arr_element;
+    int a = 0;
+    char *value = NULL;
+    int idx = -1;
+    if(&start_item == NULL || &start_item->child == NULL)
+    {
+        return NULL;
+    }
+    ++idx;
+    buffer[idx] = start_item;
+
+    while(idx > -1)
+    {
+        item = buffer[idx];
+        --idx;
+        a = cJSON_IsArray(item) + cJSON_IsBool(item) + cJSON_IsFalse(item) + cJSON_IsInvalid(item) + cJSON_IsNull(item) + cJSON_IsNumber(item) + cJSON_IsObject(item) + cJSON_IsRaw(item) + cJSON_IsString(item) + cJSON_IsTrue(item);
+
+        if(cJSON_IsArray(arr_element))
+        {
+            for(int i = 0; i < cJSON_GetArraySize(item); ++i)
+            {
+                arr_element = cJSON_GetArrayItem(item, idx);
+                idx++;
+                buffer[idx] = arr_element;
+            }
+        }
+        else
+        {
+
+            if(a > 0 && &item->child != NULL)
+            {
+                idx++;
+                buffer[idx] = item->child;
+            }
+
+            if(&item->next != NULL)
+            {
+                    idx++;
+                    buffer[idx] = item->next;
+            }
+
+            if(a > 0 && strcasecmp(item->string, key) == 0)
+            {
+                printf(item->string);
+                if(cJSON_IsArray(item) == 1)
+                {
+                    item = cJSON_GetArrayItem(item, 0);
+
+                    if(cJSON_IsString(item) == 0)
+                    {
+                        item = item->child;
+                    }
+                }
+
+
+                value = item->valuestring;
+                idx = -1;
+            }
+        }
+    }
+
+    return value;
+}
+
 /* This is a safeguard to prevent copy-pasters from using incompatible C and header files */
 #if (CJSON_VERSION_MAJOR != 1) || (CJSON_VERSION_MINOR != 7) || (CJSON_VERSION_PATCH != 16)
     #error cJSON.h and cJSON.c have different versions. Make sure that both have the same.
@@ -2661,6 +2730,8 @@ CJSON_PUBLIC(cJSON *) cJSON_CreateDoubleArray(const double *numbers, int count)
 
     return a;
 }
+
+
 
 CJSON_PUBLIC(cJSON *) cJSON_CreateStringArray(const char *const *strings, int count)
 {

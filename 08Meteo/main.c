@@ -56,28 +56,33 @@ void get_data(char *city)
         curl_easy_cleanup(curl);
     }
 }
-void print_data_from_json(char * data)
+
+void print_data_from_json(char * data, char * input)
 {
+    printf(data);
     cJSON *root = cJSON_Parse(data);
     if(root != NULL)
     {
-        cJSON *current_condition = cJSON_GetArrayItem(root->child, 0);
-        cJSON *weatherDesc  = cJSON_GetArrayItem(current_condition->child->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next, 0);
-        printf("Weather %s\n", weatherDesc->child->valuestring);
-        printf("Wind - %s %s degree %s km/h\n", current_condition->child->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->valuestring, current_condition->child->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->valuestring, current_condition->child->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->next->valuestring);
-        printf("%s %s\n", current_condition->child->string, current_condition->child->valuestring);
-        printf("%s %s\n", current_condition->child->next->next->next->next->next->next->next->next->next->next->string, current_condition->child->next->next->next->next->next->next->next->next->next->next->valuestring);
+        char * city = cJSON_GetStringByKeyName(root, "areaName");
+
+        printf("City %s\n", city);
+        if(strcmp(city, input) == 0)
+        {
+            printf("Weather %s\n", cJSON_GetStringByKeyName(root, "weatherDesc"));
+            printf("Wind - %s %s degree %s km/h\n", cJSON_GetStringByKeyName(root, "winddir16Point"), cJSON_GetStringByKeyName(root, "winddirDegree"), cJSON_GetStringByKeyName(root, "windspeedKmph"));
+            printf("Temperature %s C\n", cJSON_GetStringByKeyName(root, "temp_C"));
+        }
+        else
+        {
+            printf("Wrong input.");
+        }
     }
 }
 
 
 int main()
 {
-    printf("Weather.\n");
-    printf("Insert name city:\n");
-    char instr[20];
-    scanf("%s",instr);
     get_data(instr);
-    print_data_from_json(readBuffer);
+    print_data_from_json(readBuffer, instr);
     return 0;
 }
