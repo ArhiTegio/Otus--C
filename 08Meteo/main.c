@@ -29,6 +29,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
+
 void get_data(char *city)
 {
     CURL *curl;
@@ -82,6 +83,10 @@ void print_data_from_json(char * data, char * input)
 
 int main()
 {
+    char** instr;
+    printf("Insert city :\n");
+    scanf("%s", &instr);
+
     get_data(instr);
     print_data_from_json(readBuffer, instr);
     return 0;
