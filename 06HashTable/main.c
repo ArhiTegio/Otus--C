@@ -117,7 +117,7 @@ struct hash_table delete_(struct hash_table *hash, char* key){
             if(r.next_addres >= 0) {
                 hash->data_array[r.next_addres].is_deleted = 1;
             }
-            else{
+            else {
                 break;
             }
         }
@@ -164,7 +164,6 @@ int get_(struct hash_table *hash, char *key){
 struct hash_table set_(struct hash_table *hash, char *key, int *value)
 {
     int val = *value;
-    //printf("%d\n", val);
     int position = hash_func(key, hash->count_data_table);
     int index = hash->hash_array[position];
     struct row r = hash->data_array[index];
@@ -184,7 +183,6 @@ struct hash_table set_(struct hash_table *hash, char *key, int *value)
         }
     }
     while(1);
-    printf("%s %d %d\n", key, val, hash->data_array[index].value);
     return *hash;
 }
 
@@ -239,7 +237,6 @@ int main(int argc, char **argv)
         }
         printf("\n");
         int count;
-        //strings = str_split(buffer, 0x20);
         count = split(buffer, 0x20, &strings);
 
         printf("%d \n", count);
