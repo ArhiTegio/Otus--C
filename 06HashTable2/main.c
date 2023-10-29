@@ -186,20 +186,43 @@ struct hash_table set_(struct hash_table *hash, char *key, int *value)
     return *hash;
 }
 
-int split (const char *txt, char delim, char ***tokens)
+int equels_split(char* delims, char* elemints)
 {
+    int result = 0;
+    int count = sizeof(delims)/ sizeof(char);
+
+    for(int i = 0; i < count; ++i)
+    {
+        if(delims[i] == elemints[0])
+        {
+            result = 1;
+            break;
+        }
+    }
+    return result;
+}
+
+int split (const char *txt, char *delim, char ***tokens)
+{
+    printf("%s\n", txt);
     int *tklen, *t, count = 1;
     char **arr, *p = (char *) txt;
 
-    while (*p != '\0') if (*p++ == delim) count += 1;
+    while (*p != '\0')
+    {
+        if (equels_split(delim, p++))
+        {
+            count += 1;
+        }
+    }
     t = tklen = calloc (count, sizeof (int));
-    for (p = (char *) txt; *p != '\0'; p++) *p == delim ? *t++ : (*t)++;
+    for (p = (char *) txt; *p != '\0'; p++) equels_split(delim, p) ? *t++ : (*t)++;
     *tokens = arr = malloc (count * sizeof (char *));
     t = tklen;
     p = *arr++ = calloc (*(t++) + 1, sizeof (char *));
     while (*txt != '\0')
     {
-        if (*txt == delim)
+        if (equels_split(delim, txt))
         {
             p = *arr++ = calloc (*(t++) + 1, sizeof (char *));
             txt++;
@@ -215,8 +238,9 @@ int main(int argc, char **argv)
 {
     if(argc > 1){
         struct hash_table hash = create_hash_table(256);
-        char buffer[512];
+        char buffer[1024];
         char** strings;
+        char strs[1024] = {};
 
         // чтение из файла
         printf(argv[1]);
@@ -224,9 +248,20 @@ int main(int argc, char **argv)
         FILE *fp = fopen(argv[1], "r");
         if(fp)
         {
-            while((fgets(buffer, 512, fp))!=NULL)
+            int pos = 0;
+            while((fgets(buffer, 1024, fp))!=NULL)
             {
                 printf("%s", buffer);
+                if(pos < 1024)
+                {
+                    for(int i = 0; i < sizeof(buffer) / sizeof(char); ++i)
+                    {
+                        if(buffer[i] == '\0')
+                            break;
+                        strs[pos] = buffer[i];
+                        pos++;
+                    }
+                }
             }
             fclose(fp);
         }
@@ -236,13 +271,20 @@ int main(int argc, char **argv)
             return 0;
         }
         printf("\n");
+        printf("\n");
+        printf("|\n");
+        printf("%s", strs);
+        printf("|\n");
+        printf("\n");
         int count;
-        count = split(buffer, 0x20, &strings);
+        char delims[] = { 0x20, 0x0A, 0x0D, 0x09 };
+        count = split(&strs, delims, &strings);
 
         printf("%d \n", count);
         for(int i = 0; i < count; ++i)
         {
 
+            printf("|%s|\n", strings[i]);
             int val = get_(&hash, strings[i]);
             if(val <= -1)
             {
@@ -258,7 +300,7 @@ int main(int argc, char **argv)
         for(int i = 0; i < sizeof(hash.data_array); ++i)
         {
             if(&hash.data_array[i] != NULL && &hash.data_array[i].key != NULL && hash.data_array[i].value > 0) {
-                printf("%s = %d\n", hash.data_array[i].key, hash.data_array[i].value);
+                printf("%s = %d+\n", hash.data_array[i].key, hash.data_array[i].value);
             }
         }
     }
